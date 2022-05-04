@@ -1,4 +1,8 @@
-# mgk_app
+# clone
+
+git clone https://github.com/aoswa/mgk_app.git
+
+# docker
 
 docker compose up -d
 
