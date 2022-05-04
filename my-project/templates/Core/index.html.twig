@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Movies APP{% endblock %}
+
+{% block body %}
+
+    {% if movies is not empty %}
+
+        {% include 'core/partials/pagination.html.twig' with {
+            'pagination': pagination
+        } %}
+            
+        {% for movie in movies %}
+        <div class="row mt-2">
+            <div class="col-sm-2">
+                <picture width="115px">
+                    {% set maxWidth = '0' %}
+                    {% set srcImage = '' %}
+                    
+                    {% for image in movie.images %}
+                        {% if image.type is constant('App\\Entity\\Image::KEYART_TYPE_IMAGE') %}
+                            <source srcset="{{ asset(image.image.path) }} {{ image.image.width }}w">
+                            {% if maxWidth < image.image.width %}
+                                {% set srcImage = image.image %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    <img width="{{ srcImage.width }}" src="{{ asset(srcImage.path) }}">
+                </picture>
+            </div>
+            <div class="col-sm-10">
+                <h5>{{ movie.headline }} ({{ movie.year }})</h5>
+                <p>{{ movie.synopsis }}</p>
+
+                <a href="{{ path('core.movie', { id: movie.id }) }}" class="btn btn-primary">DETAILS</a>
+            </div>
+        </div>
+        {% endfor %}
+
+        <hr>
+
+        {% include 'core/partials/pagination.html.twig' with {
+            'pagination': pagination
+        } %}
+
+    {% else %}
+
+        <div class="alert alert-warning">
+            No movies in database.
+        </div>
+
+    {% endif %}
+
+{% endblock %}
